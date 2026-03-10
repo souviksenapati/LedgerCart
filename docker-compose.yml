@@ -1,13 +1,15 @@
+name: ledgercart
+
 services:
   # PostgreSQL Database
   postgres:
     image: postgres:16-alpine
-    container_name: senapati-postgres
+    container_name: ledgercart-postgres
     restart: unless-stopped
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: senapati_hardware
+      POSTGRES_DB: ledgercart
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
@@ -18,17 +20,17 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      - senapati-network
+      - ledgercart-network
 
   # FastAPI Backend
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: senapati-backend
+    container_name: ledgercart-backend
     restart: unless-stopped
     environment:
-      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/senapati_hardware
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/ledgercart
       SECRET_KEY: your-secret-key-change-in-production
       ALGORITHM: HS256
       ACCESS_TOKEN_EXPIRE_MINUTES: 1440
@@ -48,14 +50,14 @@ services:
       retries: 3
       start_period: 40s
     networks:
-      - senapati-network
+      - ledgercart-network
 
   # React Frontend with Nginx
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: senapati-frontend
+    container_name: ledgercart-frontend
     restart: unless-stopped
     ports:
       - "80:80"
@@ -68,7 +70,7 @@ services:
       retries: 3
       start_period: 20s
     networks:
-      - senapati-network
+      - ledgercart-network
 
 volumes:
   postgres_data:
@@ -77,5 +79,5 @@ volumes:
     driver: local
 
 networks:
-  senapati-network:
+  ledgercart-network:
     driver: bridge

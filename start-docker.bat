@@ -1,8 +1,8 @@
 @echo off
-REM Quick start script for Senapati Hardware Docker deployment (Windows)
+REM Quick start script for LedgerCart Docker deployment (Windows)
 
 echo ==========================================
-echo  Building Senapati Hardware Containers
+echo  Building LedgerCart Containers
 echo ==========================================
 echo.
 
@@ -43,7 +43,7 @@ docker-compose ps
 
 echo.
 echo ==========================================
-echo   Senapati Hardware is now running!
+echo   LedgerCart is now running!
 echo ==========================================
 echo.
 echo  Frontend (Store):  http://localhost
@@ -52,9 +52,9 @@ echo  Backend API:       http://localhost:8000
 echo  API Docs:          http://localhost:8000/docs
 echo.
 echo  Default Login Credentials:
-echo    Admin:    admin@senapatihardware.com / admin123
+echo    Admin:    admin@ledgercart.com / admin123
 echo    Customer: customer@demo.com / customer123
-echo    Staff:    staff@senapatihardware.com / staff123
+echo    Staff:    staff@ledgercart.com / staff123
 echo.
 echo  Useful Commands:
 echo    View logs:     docker-compose logs -f

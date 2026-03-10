@@ -1,4 +1,4 @@
-# 🛠️ Senapati Hardware - Full-Scale E-Commerce Platform
+# 🛠️ LedgerCart - Full-Scale E-Commerce Platform
 
 A comprehensive e-commerce solution for hardware stores with inventory management, admin dashboard, customer portal, and complete product management system.
 
@@ -106,7 +106,7 @@ See [DOCKER-README.md](DOCKER-README.md) for detailed Docker documentation.
    - Install PostgreSQL 16
    - Create database:
      ```sql
-     CREATE DATABASE senapati_hardware;
+     CREATE DATABASE ledgercart;
      ```
 
 5. **Configure environment**
@@ -152,14 +152,14 @@ After seeding the database:
 
 | Role | Email | Password |
 |------|-------|----------|
-| Admin | admin@senapatihardware.com | admin123 |
+| Admin | admin@ledgercart.com | admin123 |
 | Customer | customer@demo.com | customer123 |
-| Staff | staff@senapatihardware.com | staff123 |
+| Staff | staff@ledgercart.com | staff123 |
 
 ## 📁 Project Structure
 
 ```
-Senapati-Hardware/
+ledgercart/
 ├── backend/                    # FastAPI Backend
 │   ├── app/
 │   │   ├── models/            # SQLAlchemy models
@@ -322,7 +322,7 @@ This project is licensed under the MIT License.
 
 ## 👨‍💻 Author
 
-Built for Senapati Hardware Store
+Built for LedgerCart Store
 
 ## 🆘 Support
 

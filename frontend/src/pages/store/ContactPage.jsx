@@ -17,9 +17,9 @@ export default function ContactPage() {
   };
 
   const info = [
-    { icon: MapPin, title: 'Visit Us', lines: ['Senapati Hardware Store', 'Near Main Market, Station Road', 'Balasore, Odisha 756001'] },
+    { icon: MapPin, title: 'Visit Us', lines: ['LedgerCart Store', 'Near Main Market, Station Road', 'Balasore, Odisha 756001'] },
     { icon: Phone, title: 'Call Us', lines: ['+91 98765 43210', '+91 67890 12345', 'Mon-Sat: 9 AM - 8 PM'] },
-    { icon: Mail, title: 'Email Us', lines: ['info@senapatihardware.com', 'support@senapatihardware.com'] },
+    { icon: Mail, title: 'Email Us', lines: ['info@ledgercart.com', 'support@ledgercart.com'] },
     { icon: Clock, title: 'Working Hours', lines: ['Mon - Sat: 9:00 AM - 8:00 PM', 'Sunday: 10:00 AM - 4:00 PM', 'Public Holidays: Closed'] },
   ];
 
@@ -80,7 +80,7 @@ export default function ContactPage() {
           <div className="bg-gray-100 h-full min-h-[400px] flex items-center justify-center">
             <div className="text-center text-gray-400">
               <MapPin className="w-16 h-16 mx-auto mb-4" />
-              <p className="font-medium text-lg">Senapati Hardware</p>
+              <p className="font-medium text-lg">LedgerCart</p>
               <p className="text-sm">Near Main Market, Station Road</p>
               <p className="text-sm">Balasore, Odisha 756001</p>
               <p className="text-xs mt-4">Google Maps embed can be added here</p>

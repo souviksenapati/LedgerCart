@@ -74,26 +74,33 @@ export default function AdminSettingsPage() {
               {f.type === 'textarea' ? (
                 <textarea rows={3} className="input-field" value={settings[f.key] || ''} onChange={e => update(f.key, e.target.value)} />
               ) : f.key.endsWith('_url') ? (
-                <div className="flex gap-2">
-                  <input type="text" className="input-field flex-1" value={settings[f.key] || ''} onChange={e => update(f.key, e.target.value)} placeholder="https://..." />
-                  <input
-                    type="file"
-                    id={`file-${f.key}`}
-                    className="hidden"
-                    onChange={async (e) => {
-                      const file = e.target.files[0];
-                      if (!file) return;
-                      try {
-                        const res = await uploadAPI.upload(file);
-                        update(f.key, res.data.url);
-                        toast.success('Image uploaded');
-                      } catch {
-                        toast.error('Upload failed');
-                      }
-                    }}
-                  />
-                  <label htmlFor={`file-${f.key}`} className="btn-secondary whitespace-nowrap cursor-pointer">Upload</label>
-                  {settings[f.key] && <img src={settings[f.key]} alt="Preview" className="h-10 w-10 object-contain border rounded bg-gray-50" />}
+                <div className="space-y-2">
+                  <div className="flex gap-2 items-center">
+                    <input type="text" className="input-field flex-1" value={settings[f.key] || ''} onChange={e => update(f.key, e.target.value)} placeholder="https://..." />
+                    <input
+                      type="file"
+                      id={`file-${f.key}`}
+                      className="hidden"
+                      onChange={async (e) => {
+                        const file = e.target.files[0];
+                        if (!file) return;
+                        try {
+                          const res = await uploadAPI.upload(file);
+                          update(f.key, res.data.url);
+                          toast.success('Image uploaded');
+                        } catch {
+                          toast.error('Upload failed');
+                        }
+                      }}
+                    />
+                    <label htmlFor={`file-${f.key}`} className="btn-secondary whitespace-nowrap cursor-pointer">Upload</label>
+                  </div>
+                  {settings[f.key] && (
+                    <div className="flex items-center gap-3 p-2 bg-gray-50 rounded border w-fit">
+                      <img src={settings[f.key]} alt="Preview" className="h-16 w-auto max-w-[160px] object-contain" />
+                      <p className="text-xs text-gray-400">Preview</p>
+                    </div>
+                  )}
                 </div>
               ) : (
                 <input type={f.type} className="input-field" value={settings[f.key] || ''} onChange={e => update(f.key, e.target.value)} />

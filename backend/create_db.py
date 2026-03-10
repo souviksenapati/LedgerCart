@@ -7,14 +7,14 @@ try:
     cur.execute("SELECT 1")
     print("PostgreSQL connected!")
     
-    cur.execute("SELECT datname FROM pg_database WHERE datname='senapati_hardware'")
+    cur.execute("SELECT datname FROM pg_database WHERE datname='ledgercart'")
     exists = cur.fetchone()
     
     if not exists:
-        cur.execute("CREATE DATABASE senapati_hardware")
-        print("Database 'senapati_hardware' created!")
+        cur.execute("CREATE DATABASE ledgercart")
+        print("Database 'ledgercart' created!")
     else:
-        print("Database 'senapati_hardware' already exists.")
+        print("Database 'ledgercart' already exists.")
     
     cur.close()
     conn.close()

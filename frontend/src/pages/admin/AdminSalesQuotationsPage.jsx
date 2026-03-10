@@ -539,7 +539,7 @@ export default function AdminSalesQuotationsPage() {
                                 step="0.01"
                                 min="0"
                                 value={item.unit_price}
-                                onChange={(e) => updateItem(index, 'unit_price', parseFloat(e.target.value) || 0)}
+                                onChange={(e) => updateItem(index, 'unit_price', e.target.value === '' ? '' : parseFloat(e.target.value))}
                                 className="input w-28 text-sm"
                               />
                             </td>
@@ -550,7 +550,7 @@ export default function AdminSalesQuotationsPage() {
                                 min="0"
                                 max="100"
                                 value={item.discount_percentage}
-                                onChange={(e) => updateItem(index, 'discount_percentage', parseFloat(e.target.value) || 0)}
+                                onChange={(e) => updateItem(index, 'discount_percentage', e.target.value === '' ? '' : parseFloat(e.target.value))}
                                 className="input w-20 text-sm"
                               />
                             </td>
@@ -561,7 +561,7 @@ export default function AdminSalesQuotationsPage() {
                                 min="0"
                                 max="100"
                                 value={item.tax_percentage}
-                                onChange={(e) => updateItem(index, 'tax_percentage', parseFloat(e.target.value) || 0)}
+                                onChange={(e) => updateItem(index, 'tax_percentage', e.target.value === '' ? '' : parseFloat(e.target.value))}
                                 className="input w-20 text-sm"
                               />
                             </td>
@@ -598,7 +598,7 @@ export default function AdminSalesQuotationsPage() {
                       min="0"
                       max="100"
                       value={formData.discount_percentage}
-                      onChange={(e) => setFormData({ ...formData, discount_percentage: parseFloat(e.target.value) || 0 })}
+                      onChange={(e) => setFormData({ ...formData, discount_percentage: e.target.value === '' ? '' : parseFloat(e.target.value) })}
                       className="input w-full"
                     />
                   </div>
@@ -609,7 +609,7 @@ export default function AdminSalesQuotationsPage() {
                       step="0.01"
                       min="0"
                       value={formData.freight_charges}
-                      onChange={(e) => setFormData({ ...formData, freight_charges: parseFloat(e.target.value) || 0 })}
+                      onChange={(e) => setFormData({ ...formData, freight_charges: e.target.value === '' ? '' : parseFloat(e.target.value) })}
                       className="input w-full"
                     />
                   </div>
@@ -620,7 +620,7 @@ export default function AdminSalesQuotationsPage() {
                       step="0.01"
                       min="0"
                       value={formData.other_charges}
-                      onChange={(e) => setFormData({ ...formData, other_charges: parseFloat(e.target.value) || 0 })}
+                      onChange={(e) => setFormData({ ...formData, other_charges: e.target.value === '' ? '' : parseFloat(e.target.value) })}
                       className="input w-full"
                     />
                   </div>

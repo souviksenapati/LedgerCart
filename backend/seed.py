@@ -1,5 +1,5 @@
 """
-Seed script — populates the database with sample data for Senapati Hardware.
+Seed script — populates the database with sample data for LedgerCart.
 Run: python seed.py
 """
 import sys
@@ -20,10 +20,10 @@ db = SessionLocal()
 
 # ─── ADMIN USER ──────────────────────────────────────────
 admin = User(
-    email="admin@senapatihardware.com",
+    email="admin@ledgercart.com",
     password_hash=hash_password("admin123"),
     first_name="Admin",
-    last_name="Senapati",
+    last_name="Admin",
     phone="9876543210",
     role=UserRole.ADMIN,
 )
@@ -53,16 +53,16 @@ db.add(addr)
 
 # ─── ROLE-BASED USERS ────────────────────────────────────
 roles_to_seed = [
-    (UserRole.STORE_MANAGER, "Store", "Manager", "storemanager@senapati.com", "storemanager123", "Management", 45000),
-    (UserRole.SALESPERSON, "Sales", "Person", "salesperson@senapati.com", "salesperson123", "Sales", 20000),
-    (UserRole.PURCHASE_MANAGER, "Purchase", "Manager", "purchasemanager@senapati.com", "purchasemanager123", "Procurement", 40000),
-    (UserRole.STOCK_KEEPER, "Stock", "Keeper", "stockkeeper@senapati.com", "stockkeeper123", "Warehouse", 22000),
-    (UserRole.ACCOUNTANT, "Account", "Ant", "accountant@senapati.com", "accountant123", "Accounts", 35000),
+    (UserRole.STORE_MANAGER, "Store", "Manager", "storemanager@ledgercart.com", "storemanager123", "Management", 45000),
+    (UserRole.SALESPERSON, "Sales", "Person", "salesperson@ledgercart.com", "salesperson123", "Sales", 20000),
+    (UserRole.PURCHASE_MANAGER, "Purchase", "Manager", "purchasemanager@ledgercart.com", "purchasemanager123", "Procurement", 40000),
+    (UserRole.STOCK_KEEPER, "Stock", "Keeper", "stockkeeper@ledgercart.com", "stockkeeper123", "Warehouse", 22000),
+    (UserRole.ACCOUNTANT, "Account", "Ant", "accountant@ledgercart.com", "accountant123", "Accounts", 35000),
 ]
 
 # ─── BASE STAFF USER ─────────────────────────────────────
 staff_user = User(
-    email="staff@senapatihardware.com",
+    email="staff@ledgercart.com",
     password_hash=hash_password("staff123"),
     first_name="Priya",
     last_name="Patel",
@@ -218,9 +218,9 @@ db.add_all(banners)
 
 # ─── STORE SETTINGS ──────────────────────────────────────
 store_settings = [
-    StoreSetting(key="store_name", value="Senapati Hardware", description="Store name"),
+    StoreSetting(key="store_name", value="LedgerCart", description="Store name"),
     StoreSetting(key="store_phone", value="+91 98765 43210", description="Store phone"),
-    StoreSetting(key="store_email", value="info@senapatihardware.com", description="Store email"),
+    StoreSetting(key="store_email", value="info@ledgercart.com", description="Store email"),
     StoreSetting(key="store_address", value="Main Road, Bhubaneswar, Odisha 751001", description="Store address"),
     StoreSetting(key="gst_number", value="21XXXXX1234X1Z5", description="GST Number"),
     StoreSetting(key="gst_rate", value="18", description="GST Rate %"),
@@ -234,6 +234,6 @@ db.commit()
 db.close()
 
 print("✅ Database seeded successfully!")
-print("   Admin: admin@senapatihardware.com / admin123")
+print("   Admin: admin@ledgercart.com / admin123")
 print("   Customer: customer@demo.com / customer123")
-print("   Staff: staff@senapatihardware.com / staff123")
+print("   Staff: staff@ledgercart.com / staff123")

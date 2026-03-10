@@ -1,6 +1,8 @@
-import { Wrench, Users, TrendingUp, Award, ShieldCheck, Truck } from 'lucide-react';
+import { Users, TrendingUp, Award, ShieldCheck, Truck } from 'lucide-react';
+import { useSettings } from '../../context/SettingsContext';
 
 export default function AboutPage() {
+  const settings = useSettings();
   const values = [
     { icon: Award, title: 'Quality Products', desc: 'We source from trusted brands and manufacturers to ensure you get the best.' },
     { icon: ShieldCheck, title: 'Trust & Transparency', desc: 'Honest pricing, genuine products, and accurate descriptions — always.' },
@@ -11,7 +13,7 @@ export default function AboutPage() {
   ];
 
   const milestones = [
-    { year: '2005', event: 'Senapati Hardware founded as a small shop in Balasore, Odisha.' },
+    { year: '2005', event: 'LedgerCart founded as a small shop in Balasore, Odisha.' },
     { year: '2010', event: 'Expanded to a full-size retail store with 5,000+ products.' },
     { year: '2015', event: 'Opened a second branch and started bulk supply for contractors.' },
     { year: '2020', event: 'Launched our online store to serve customers across India.' },
@@ -22,7 +24,7 @@ export default function AboutPage() {
     <div className="max-w-7xl mx-auto px-4 py-12">
       {/* Hero */}
       <div className="text-center mb-16">
-        <h1 className="text-4xl font-bold mb-4">About Senapati Hardware</h1>
+        <h1 className="text-4xl font-bold mb-4">About LedgerCart</h1>
         <p className="text-gray-500 max-w-2xl mx-auto text-lg">
           Your trusted hardware partner since 2005. From a small shop in Balasore to serving customers across India — we bring quality tools and building materials right to your doorstep.
         </p>
@@ -33,7 +35,7 @@ export default function AboutPage() {
         <div>
           <h2 className="text-2xl font-bold mb-4">Our Story</h2>
           <p className="text-gray-600 mb-4">
-            Senapati Hardware was founded by <strong>Mr. Senapati</strong> in 2005 with a simple mission — provide quality hardware and tools at fair prices. What started as a small neighborhood shop has grown into one of the most trusted hardware stores in the region.
+            LedgerCart was founded in 2005 with a simple mission — provide quality hardware and tools at fair prices. What started as a small neighborhood shop has grown into one of the most trusted hardware stores in the region.
           </p>
           <p className="text-gray-600 mb-4">
             Over the years, we've built strong relationships with leading brands like Bosch, Stanley, Asian Paints, Havells, and many more. Our team of experienced staff members provides expert advice to help homeowners, contractors, and businesses find exactly what they need.
@@ -44,7 +46,10 @@ export default function AboutPage() {
         </div>
         <div className="bg-gradient-to-br from-primary/10 to-accent/10 rounded-2xl p-12 flex items-center justify-center min-h-[300px]">
           <div className="text-center">
-            <Wrench className="w-20 h-20 text-primary mx-auto mb-4" />
+            {settings.store_logo_url
+              ? <img src={settings.store_logo_url} alt={settings.store_name || 'LedgerCart'} className="h-20 w-auto mx-auto mb-4" />
+              : <span className="text-4xl font-bold text-primary block mb-4">{settings.store_name || 'LedgerCart'}</span>
+            }
             <p className="text-3xl font-bold text-primary">Since 2005</p>
             <p className="text-gray-500">Serving with Trust</p>
           </div>

@@ -50,10 +50,11 @@ export default function AdminProductsPage() {
 
   const openEdit = (p) => {
     setEditing(p);
+    const primaryImage = p.images?.find(i => i.is_primary)?.image_url || p.images?.[0]?.image_url || '';
     setForm({
       name: p.name, description: p.description || '', price: p.price, discount_percentage: p.discount_percentage || 0,
       stock: p.stock, category_id: p.category_id, brand: p.brand || '', sku: p.sku || '', unit: p.unit || 'piece',
-      is_featured: p.is_featured, is_active: p.is_active
+      is_featured: p.is_featured, is_active: p.is_active, image_url: primaryImage
     });
     setShowForm(true);
   };
@@ -69,8 +70,9 @@ export default function AdminProductsPage() {
         .replace(/\s+/g, '-')
         .replace(/[^a-z0-9-]/g, '');
 
+      const { image_url, ...formFields } = form;
       const data = {
-        ...form,
+        ...formFields,
         sku: form.sku.toUpperCase(),
         price,
         stock,
@@ -78,13 +80,26 @@ export default function AdminProductsPage() {
         slug: editing ? undefined : slug // Only send slug on create
       };
 
+      let savedProduct;
       if (editing) {
-        await productsAPI.update(editing.id, data);
+        const res = await productsAPI.update(editing.id, data);
+        savedProduct = res.data;
         toast.success('Product updated');
       } else {
-        await productsAPI.create(data);
+        const res = await productsAPI.create(data);
+        savedProduct = res.data;
         toast.success('Product created');
       }
+
+      // Persist image to product images table if URL was set / changed
+      const existingPrimaryUrl = editing?.images?.find(i => i.is_primary)?.image_url || editing?.images?.[0]?.image_url;
+      if (image_url && image_url !== existingPrimaryUrl) {
+        if (editing?.images?.length) {
+          await Promise.all(editing.images.map(img => productsAPI.removeImage(savedProduct.id, img.id).catch(() => {})));
+        }
+        await productsAPI.addImage(savedProduct.id, image_url, true);
+      }
+
       setShowForm(false);
       fetchProducts();
     } catch (err) {
@@ -144,9 +159,14 @@ export default function AdminProductsPage() {
   const handleImageUpload = async (productId, file) => {
     try {
       const res = await uploadAPI.upload(file);
-      // Note: Image upload to product would require a product images endpoint
-      toast.success('Image uploaded to server');
-      // For now, just notify - backend needs to support adding images to products
+      const imageUrl = res.data.url;
+      // Remove existing images then add new one as primary
+      const product = products.find(p => p.id === productId);
+      if (product?.images?.length) {
+        await Promise.all(product.images.map(img => productsAPI.removeImage(productId, img.id).catch(() => {})));
+      }
+      await productsAPI.addImage(productId, imageUrl, true);
+      toast.success('Image uploaded');
       fetchProducts();
     } catch (err) {
       toast.error(err.response?.data?.detail || 'Upload failed');
@@ -186,7 +206,7 @@ export default function AdminProductsPage() {
                   <td className="p-3">
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 bg-gray-100 rounded flex items-center justify-center">
-                        {p.images?.[0] ? <img src={p.images[0].image_url} className="w-10 h-10 object-cover rounded" /> : <ImageIcon className="w-5 h-5 text-gray-300" />}
+                        {p.images?.[0] ? <img src={p.images[0].image_url} className="w-10 h-10 object-cover rounded" alt={p.name} /> : <ImageIcon className="w-5 h-5 text-gray-300" />}
                       </div>
                       <div>
                         <p className="font-medium">{p.name}</p>
@@ -287,14 +307,19 @@ export default function AdminProductsPage() {
                       if (e.target.files[0]) {
                         try {
                           const res = await uploadAPI.upload(e.target.files[0]);
-                          setForm({ ...form, image_url: res.data.url });
+                          setForm(prev => ({ ...prev, image_url: res.data.url }));
                           toast.success('Image uploaded');
                         } catch { toast.error('Upload failed'); }
                       }
                     }} />
                   </label>
                 </div>
-                {form.image_url && <img src={form.image_url} className="w-32 h-32 object-cover rounded mt-2 border" alt="Preview" />}
+                {form.image_url && (
+                  <div className="mt-2">
+                    <p className="text-xs text-gray-500 mb-1">Preview</p>
+                    <img src={form.image_url} className="w-40 h-40 object-contain rounded border bg-gray-50 p-1" alt="Preview" />
+                  </div>
+                )}
               </div>
               <div className="flex items-center gap-6">
                 <label className="flex items-center gap-2"><input type="checkbox" checked={form.is_featured} onChange={e => setForm({ ...form, is_featured: e.target.checked })} /> Featured</label>

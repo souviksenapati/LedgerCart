@@ -1,4 +1,4 @@
--- RBAC Migration Script for Senapati Hardware
+-- RBAC Migration Script for LedgerCart
 -- Run this against your PostgreSQL database before deploying the new code.
 -- NOTE: The DB stores enum values in UPPERCASE (ADMIN, STAFF, CUSTOMER, etc.)
 

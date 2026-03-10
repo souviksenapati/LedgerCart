@@ -47,7 +47,7 @@ export default function ShippingExchangePage() {
         </ol>
 
         <h2 className="text-xl font-bold text-gray-900">7. Contact Us</h2>
-        <p>Email: <strong>info@senapatihardware.com</strong> | Phone: <strong>+91 98765 43210</strong></p>
+        <p>Email: <strong>info@ledgercart.com</strong> | Phone: <strong>+91 98765 43210</strong></p>
       </div>
     </div>
   );

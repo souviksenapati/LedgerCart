@@ -141,6 +141,7 @@ export default function AdminInwardsOutwardsPage() {
       acc[key] = {
         invoice_id: key,
         invoice_number: t.invoice_number,
+        reference: t.reason,   // fallback reference from first product reason
         transaction_type: t.transaction_type,
         supplier_name: t.supplier_name,
         customer_name: t.customer_name,
@@ -262,8 +263,18 @@ export default function AdminInwardsOutwardsPage() {
                       {inv.transaction_type === 'inward' ? '↓ Inward' : '↑ Outward'}
                     </span>
                   </td>
-                  <td className="p-3 font-mono text-xs">{inv.invoice_number || '-'}</td>
-                  <td className="p-3">{inv.supplier_name || inv.customer_name || '-'}</td>
+                  <td className="p-3">
+                    {inv.invoice_number
+                      ? <span className="font-mono text-xs">{inv.invoice_number}</span>
+                      : inv.reference
+                        ? <span className="text-xs text-gray-500 italic">{inv.reference}</span>
+                        : <span className="text-gray-400">-</span>}
+                  </td>
+                  <td className="p-3">
+                    {inv.supplier_name || inv.customer_name
+                      ? <span>{inv.supplier_name || inv.customer_name}</span>
+                      : <span className="text-xs text-gray-400 italic">System / E-commerce</span>}
+                  </td>
                   <td className="p-3">
                     <span className="text-xs bg-blue-50 px-2 py-1 rounded">{inv.products.length} items</span>
                   </td>

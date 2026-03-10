@@ -12,6 +12,7 @@ import ProductDetailPage from './pages/store/ProductDetailPage';
 import OrderDetailPage from './pages/store/OrderDetailPage';
 import CartPage from './pages/store/CartPage';
 import CheckoutPage from './pages/store/CheckoutPage';
+import PaymentPage from './pages/store/PaymentPage';
 import OrderConfirmationPage from './pages/store/OrderConfirmationPage';
 import OrdersPage from './pages/store/OrdersPage';
 import CustomerLoginPage from './pages/store/CustomerLoginPage';
@@ -96,6 +97,7 @@ export default function App() {
       <Route path="/product/:slug" element={<StoreLayout><ProductDetailPage /></StoreLayout>} />
       <Route path="/cart" element={<StoreLayout><CartPage /></StoreLayout>} />
       <Route path="/checkout" element={<StoreLayout><CheckoutPage /></StoreLayout>} />
+      <Route path="/payment/:id" element={<StoreLayout><PaymentPage /></StoreLayout>} />
       <Route path="/order-confirmation/:id" element={<StoreLayout><OrderConfirmationPage /></StoreLayout>} />
       <Route path="/orders" element={<StoreLayout><OrdersPage /></StoreLayout>} />
       <Route path="/orders/:id" element={<StoreLayout><OrderDetailPage /></StoreLayout>} />

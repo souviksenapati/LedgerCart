@@ -281,6 +281,9 @@ def create_grn(
         if product:
             product.stock = Product.stock + item.received_quantity
             
+            supplier = db.query(Supplier).filter(Supplier.id == grn.supplier_id).first()
+            supplier_name = supplier.name if supplier else "Unknown Supplier"
+            
             # Create inventory log
             log = InventoryLog(
                 product_id=item.product_id,
@@ -289,7 +292,7 @@ def create_grn(
                 performed_by=current_user.id,
                 transaction_type="inward",
                 invoice_number=grn.supplier_invoice_number,
-                supplier_name=db.query(Supplier).filter(Supplier.id == grn.supplier_id).first().name,
+                supplier_name=supplier_name,
                 invoice_date=grn.grn_date,
                 notes=f"Batch: {item.batch_number}"
             )

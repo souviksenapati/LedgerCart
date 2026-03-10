@@ -19,7 +19,8 @@ export default function CheckoutPage() {
   const [showNewAddr, setShowNewAddr] = useState(false);
 
   const shipping = subtotal >= 500 ? 0 : 50;
-  const tax = Math.round((subtotal - discount) * 0.18);
+  const taxable = subtotal - discount;            // GST on effective price after coupon
+  const tax = Math.round(taxable * 0.18);
   const total = subtotal - discount + shipping + tax;
 
   useEffect(() => {
@@ -64,8 +65,14 @@ export default function CheckoutPage() {
         notes
       });
       await clearCart();
-      navigate(`/order-confirmation/${r.data.id}`);
-      toast.success('Order placed successfully!');
+      if (paymentMethod === 'cod') {
+        // COD: go straight to order detail
+        navigate(`/orders/${r.data.id}`);
+        toast.success('Order placed! Pay on delivery.');
+      } else {
+        // Online payment: go to payment gateway page
+        navigate(`/payment/${r.data.id}`);
+      }
     } catch (err) {
       toast.error(err.response?.data?.detail || 'Failed to place order');
     } finally {
@@ -168,7 +175,7 @@ export default function CheckoutPage() {
           </div>
 
           <button onClick={placeOrder} disabled={submitting} className="btn-primary w-full mt-4">
-            {submitting ? 'Placing Order...' : 'Place Order'}
+            {submitting ? 'Placing Order...' : paymentMethod === 'cod' ? 'Place Order' : 'Proceed to Payment →'}
           </button>
         </div>
       </div>

@@ -399,7 +399,7 @@ export default function AdminB2BCustomersPage() {
                       type="number"
                       step="0.01"
                       value={formData.credit_limit}
-                      onChange={(e) => setFormData({ ...formData, credit_limit: parseFloat(e.target.value) || 0 })}
+                      onChange={(e) => setFormData({ ...formData, credit_limit: e.target.value === '' ? '' : parseFloat(e.target.value) })}
                       className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
                     />
                   </div>

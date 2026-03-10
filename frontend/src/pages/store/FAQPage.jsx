@@ -23,7 +23,7 @@ const faqs = [
     { q: 'How do I create an account?', a: 'Click "Register" in the top menu. Fill in your name, email, phone, and password to create an account.' },
     { q: 'I forgot my password. What do I do?', a: 'Click "Forgot Password" on the login page and follow the instructions to reset your password via email.' },
     { q: 'Are the products genuine/branded?', a: 'Yes, 100%. We source directly from authorized distributors and manufacturers. All products come with manufacturer warranty.' },
-    { q: 'Do you offer bulk/wholesale pricing?', a: 'Yes! Contact us at info@senapatihardware.com or call +91 98765 43210 for bulk order inquiries and special pricing.' },
+    { q: 'Do you offer bulk/wholesale pricing?', a: 'Yes! Contact us at info@ledgercart.com or call +91 98765 43210 for bulk order inquiries and special pricing.' },
   ]},
 ];
 

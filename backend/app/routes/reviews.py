@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session, joinedload
 from app.database import get_db
-from app.models.models import Review, Product, User
+from app.models.models import Review, Product, User, Order, OrderItem, OrderStatus, Order, OrderItem, OrderStatus
 from app.schemas.schemas import ReviewCreate, ReviewResponse
 from app.utils.auth import get_current_user, require_permission
 from typing import List
@@ -29,6 +29,15 @@ def add_review(product_id: str, req: ReviewCreate, user: User = Depends(get_curr
 
     if not 1 <= req.rating <= 5:
         raise HTTPException(400, "Rating must be 1-5")
+
+    # Only verified buyers who received the product can review (Amazon/Flipkart standard)
+    purchased = db.query(Order).join(OrderItem, OrderItem.order_id == Order.id).filter(
+        Order.user_id == user.id,
+        Order.status == OrderStatus.DELIVERED,
+        OrderItem.product_id == product_id
+    ).first()
+    if not purchased:
+        raise HTTPException(400, "You can only review products you have purchased and received")
 
     review = Review(product_id=product_id, user_id=user.id, **req.model_dump())
     db.add(review)

@@ -19,8 +19,8 @@ from app.routes import (
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
-    title="Senapati Hardware API",
-    description="Full-scale E-Commerce API for Senapati Hardware Store",
+    title="LedgerCart API",
+    description="Full-scale E-Commerce API for LedgerCart Store",
     version="1.0.0"
 )
 
@@ -73,7 +73,7 @@ app.include_router(payments.router)
 
 @app.get("/")
 def root():
-    return {"message": "Senapati Hardware API", "version": "1.0.0", "docs": "/docs"}
+    return {"message": "LedgerCart API", "version": "1.0.0", "docs": "/docs"}
 
 
 @app.get("/api/health")

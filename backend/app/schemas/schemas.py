@@ -221,6 +221,13 @@ class OrderCreate(BaseModel):
     coupon_code: Optional[str] = None
     notes: str = ""
 
+class OrderItemProductInfo(BaseModel):
+    """Lightweight product snapshot embedded in order items."""
+    slug: str = ""
+    images: List[ProductImageResponse] = []
+    class Config:
+        from_attributes = True
+
 class OrderItemResponse(BaseModel):
     id: str
     product_id: str
@@ -229,6 +236,17 @@ class OrderItemResponse(BaseModel):
     price: float
     quantity: int
     total: float
+    product: Optional[OrderItemProductInfo] = None
+    class Config:
+        from_attributes = True
+
+class OrderUserInfo(BaseModel):
+    """Minimal user details embedded in order responses."""
+    id: str
+    first_name: str
+    last_name: str
+    email: str
+    phone: str
     class Config:
         from_attributes = True
 
@@ -236,6 +254,7 @@ class OrderResponse(BaseModel):
     id: str
     order_number: str
     user_id: str
+    user: Optional[OrderUserInfo] = None
     status: str
     payment_status: str
     payment_method: str
@@ -254,6 +273,7 @@ class OrderResponse(BaseModel):
     shipping_pincode: str
     notes: str
     tracking_number: str
+    delivered_at: Optional[datetime] = None
     items: List[OrderItemResponse] = []
     created_at: datetime
     updated_at: datetime
@@ -263,6 +283,7 @@ class OrderResponse(BaseModel):
 class OrderStatusUpdate(BaseModel):
     status: str
     tracking_number: Optional[str] = None
+    payment_status: Optional[str] = None
 
 class OrderListResponse(BaseModel):
     orders: List[OrderResponse]

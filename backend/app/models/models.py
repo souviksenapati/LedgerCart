@@ -451,6 +451,9 @@ class Order(Base):
     tracking_number = Column(String(200), default="")
     estimated_delivery = Column(DateTime, nullable=True)
     delivered_at = Column(DateTime, nullable=True)
+    # ── Payment Gateway fields (Razorpay / Stripe) ──────────────────────────
+    gateway_order_id = Column(String(200), nullable=True)        # Razorpay order_id / Stripe PaymentIntent ID
+    gateway_transaction_id = Column(String(200), nullable=True)  # Razorpay payment_id / Stripe charge ID
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
     updated_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
 

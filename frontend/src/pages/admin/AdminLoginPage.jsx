@@ -56,7 +56,7 @@ export default function AdminLoginPage() {
                                     value={form.email}
                                     onChange={e => setForm({ ...form, email: e.target.value })}
                                     className="input-field pl-10 h-12 bg-gray-50 focus:bg-white"
-                                    placeholder="name@senapati.com"
+                                    placeholder="name@ledgercart.com"
                                 />
                             </div>
                         </div>

@@ -766,7 +766,7 @@ export default function AdminSalesInvoicesPage() {
                               <input
                                 type="number"
                                 value={item.quantity}
-                                onChange={(e) => handleItemChange(index, 'quantity', parseInt(e.target.value) || 0)}
+                                onChange={(e) => handleItemChange(index, 'quantity', e.target.value === '' ? '' : parseInt(e.target.value))}
                                 className="w-20 px-2 py-1 border rounded"
                                 min="1"
                               />
@@ -777,7 +777,7 @@ export default function AdminSalesInvoicesPage() {
                             <input
                               type="number"
                               value={item.unit_price}
-                              onChange={(e) => handleItemChange(index, 'unit_price', parseFloat(e.target.value) || 0)}
+                              onChange={(e) => handleItemChange(index, 'unit_price', e.target.value === '' ? '' : parseFloat(e.target.value))}
                               className="w-24 px-2 py-1 border rounded"
                               step="0.01"
                             />
@@ -786,7 +786,7 @@ export default function AdminSalesInvoicesPage() {
                             <input
                               type="number"
                               value={item.discount_percentage}
-                              onChange={(e) => handleItemChange(index, 'discount_percentage', parseFloat(e.target.value) || 0)}
+                              onChange={(e) => handleItemChange(index, 'discount_percentage', e.target.value === '' ? '' : parseFloat(e.target.value))}
                               className="w-16 px-2 py-1 border rounded"
                               step="0.01"
                             />
@@ -796,7 +796,7 @@ export default function AdminSalesInvoicesPage() {
                             <input
                               type="number"
                               value={item.tax_percentage}
-                              onChange={(e) => handleItemChange(index, 'tax_percentage', parseFloat(e.target.value) || 0)}
+                              onChange={(e) => handleItemChange(index, 'tax_percentage', e.target.value === '' ? '' : parseFloat(e.target.value))}
                               className="w-16 px-2 py-1 border rounded"
                               step="0.01"
                             />
@@ -829,7 +829,7 @@ export default function AdminSalesInvoicesPage() {
                   <input
                     type="number"
                     value={formData.discount_percentage}
-                    onChange={(e) => setFormData({ ...formData, discount_percentage: parseFloat(e.target.value) || 0 })}
+                    onChange={(e) => setFormData({ ...formData, discount_percentage: e.target.value === '' ? '' : parseFloat(e.target.value) })}
                     className="w-full px-3 py-2 border rounded-lg"
                     step="0.01"
                   />
@@ -839,7 +839,7 @@ export default function AdminSalesInvoicesPage() {
                   <input
                     type="number"
                     value={formData.freight_charges}
-                    onChange={(e) => setFormData({ ...formData, freight_charges: parseFloat(e.target.value) || 0 })}
+                    onChange={(e) => setFormData({ ...formData, freight_charges: e.target.value === '' ? '' : parseFloat(e.target.value) })}
                     className="w-full px-3 py-2 border rounded-lg"
                     step="0.01"
                   />
@@ -849,7 +849,7 @@ export default function AdminSalesInvoicesPage() {
                   <input
                     type="number"
                     value={formData.other_charges}
-                    onChange={(e) => setFormData({ ...formData, other_charges: parseFloat(e.target.value) || 0 })}
+                    onChange={(e) => setFormData({ ...formData, other_charges: e.target.value === '' ? '' : parseFloat(e.target.value) })}
                     className="w-full px-3 py-2 border rounded-lg"
                     step="0.01"
                   />

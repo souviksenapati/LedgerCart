@@ -12,7 +12,7 @@ export default function CancellationRefundPage() {
           <li>To cancel, go to "My Orders" and click "Cancel Order", or contact us directly.</li>
         </ul>
 
-        <h2 className="text-xl font-bold text-gray-900">2. Cancellation by Senapati Hardware</h2>
+        <h2 className="text-xl font-bold text-gray-900">2. Cancellation by LedgerCart</h2>
         <p>We reserve the right to cancel orders in the following cases:</p>
         <ul className="list-disc pl-6">
           <li>Product is out of stock after order placement</li>
@@ -48,7 +48,7 @@ export default function CancellationRefundPage() {
         </ul>
 
         <h2 className="text-xl font-bold text-gray-900">6. Contact for Refunds</h2>
-        <p>Email: <strong>info@senapatihardware.com</strong> | Phone: <strong>+91 98765 43210</strong></p>
+        <p>Email: <strong>info@ledgercart.com</strong> | Phone: <strong>+91 98765 43210</strong></p>
       </div>
     </div>
   );

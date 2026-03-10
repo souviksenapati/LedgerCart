@@ -41,9 +41,7 @@ export default function AdminBannersPage() {
 
   const handleImageUpload = async (file) => {
     try {
-      const formData = new FormData();
-      formData.append('file', file);
-      const res = await uploadAPI.upload(formData);
+      const res = await uploadAPI.upload(file);
       setForm(prev => ({ ...prev, image_url: res.data.url }));
       toast.success('Image uploaded');
     } catch { toast.error('Upload failed'); }
@@ -98,10 +96,18 @@ export default function AdminBannersPage() {
               <div><label className="block text-sm font-medium mb-1">Subtitle</label><input className="input-field" value={form.subtitle} onChange={e => setForm({ ...form, subtitle: e.target.value })} /></div>
               <div>
                 <label className="block text-sm font-medium mb-1">Image</label>
-                <input className="input-field" placeholder="Image URL" value={form.image_url} onChange={e => setForm({ ...form, image_url: e.target.value })} />
-                <label className="text-xs text-primary cursor-pointer hover:underline mt-1 inline-block">
-                  Or upload an image <input type="file" accept="image/*" className="hidden" onChange={e => e.target.files[0] && handleImageUpload(e.target.files[0])} />
-                </label>
+                <div className="flex gap-2">
+                  <input className="input-field flex-1" placeholder="Image URL" value={form.image_url} onChange={e => setForm({ ...form, image_url: e.target.value })} />
+                  <label className="btn-secondary cursor-pointer whitespace-nowrap">
+                    Upload <input type="file" accept="image/*" className="hidden" onChange={e => e.target.files[0] && handleImageUpload(e.target.files[0])} />
+                  </label>
+                </div>
+                {form.image_url && (
+                  <div className="mt-2">
+                    <p className="text-xs text-gray-500 mb-1">Preview</p>
+                    <img src={form.image_url} alt="Banner preview" className="w-full h-32 object-cover rounded border bg-gray-50" />
+                  </div>
+                )}
               </div>
               <div><label className="block text-sm font-medium mb-1">Link URL</label><input className="input-field" value={form.link_url} onChange={e => setForm({ ...form, link_url: e.target.value })} /></div>
               <div className="grid grid-cols-2 gap-4">

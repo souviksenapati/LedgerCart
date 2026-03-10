@@ -20,7 +20,16 @@ from typing import List
 router = APIRouter(prefix="/api/admin", tags=["Admin"])
 
 
-# ─── DASHBOARD ──────────────────────────────────────────
+# ─── PUBLIC STORE SETTINGS (no auth required) ───────────
+@router.get("/public/settings")
+def get_public_settings(db: Session = Depends(get_db)):
+    """Returns publicly visible store settings (name, logo, phone, email, address)."""
+    PUBLIC_KEYS = {"store_name", "store_logo_url", "store_phone", "store_email", "store_address"}
+    rows = db.query(StoreSetting).filter(StoreSetting.key.in_(PUBLIC_KEYS)).all()
+    return {row.key: row.value for row in rows}
+
+
+
 @router.get("/dashboard", response_model=DashboardStats)
 def get_dashboard(user=Depends(require_permission("dashboard:view")), db: Session = Depends(get_db)):
     total_revenue = db.query(func.sum(Order.total)).filter(Order.status != OrderStatus.CANCELLED).scalar() or 0

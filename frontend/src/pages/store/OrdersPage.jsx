@@ -36,9 +36,15 @@ export default function OrdersPage() {
                 <p className="font-bold">{order.order_number}</p>
                 <p className="text-xs text-gray-500">{new Date(order.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</p>
               </div>
-              <div className="flex items-center gap-2">
-                <StatusBadge status={order.status} />
-                <StatusBadge status={order.payment_status} />
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="flex items-center gap-1">
+                  <span className="text-xs text-gray-500">Order:</span>
+                  <StatusBadge status={order.status} />
+                </span>
+                <span className="flex items-center gap-1">
+                  <span className="text-xs text-gray-500">Payment:</span>
+                  <StatusBadge status={order.payment_status} />
+                </span>
               </div>
             </div>
             <div className="text-sm text-gray-600 mb-3">

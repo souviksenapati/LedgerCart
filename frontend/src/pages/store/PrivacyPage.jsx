@@ -4,7 +4,7 @@ export default function PrivacyPage() {
       <h1 className="text-3xl font-bold mb-8">Privacy Policy</h1>
       <div className="prose max-w-none text-gray-600 space-y-6">
         <p><strong>Last updated:</strong> February 10, 2026</p>
-        <p>Senapati Hardware ("we", "us", "our") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, and safeguard your personal information.</p>
+        <p>LedgerCart ("we", "us", "our") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, and safeguard your personal information.</p>
 
         <h2 className="text-xl font-bold text-gray-900">1. Information We Collect</h2>
         <ul className="list-disc pl-6">
@@ -52,7 +52,7 @@ export default function PrivacyPage() {
         <p>Our services are not intended for persons under 18 years of age. We do not knowingly collect data from minors.</p>
 
         <h2 className="text-xl font-bold text-gray-900">9. Contact Us</h2>
-        <p>For privacy-related inquiries: <strong>info@senapatihardware.com</strong> | <strong>+91 98765 43210</strong></p>
+        <p>For privacy-related inquiries: <strong>info@ledgercart.com</strong> | <strong>+91 98765 43210</strong></p>
       </div>
     </div>
   );

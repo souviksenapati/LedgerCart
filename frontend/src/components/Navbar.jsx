@@ -1,11 +1,13 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import { ShoppingCart, User, Search, Menu, X, Wrench, Heart, Package, LogOut, Shield } from 'lucide-react';
+import { ShoppingCart, User, Search, Menu, X, Heart, Package, LogOut, Shield } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
+import { useSettings } from '../context/SettingsContext';
 
 export default function Navbar() {
   const { user, logout, isAdmin, isStaff } = useAuth();
+  const settings = useSettings();
   const { itemCount } = useCart();
   const navigate = useNavigate();
   const [search, setSearch] = useState('');
@@ -35,12 +37,11 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-6 py-4">
         <div className="flex items-center justify-between gap-6">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2.5 shrink-0 group">
-            <Wrench className="w-9 h-9 text-primary-600 group-hover:rotate-12 transition-transform" />
-            <div>
-              <h1 className="text-xl font-bold text-gray-900 leading-none group-hover:text-primary-600 transition-colors">Senapati</h1>
-              <p className="text-xs text-gray-600 leading-none font-medium">HARDWARE</p>
-            </div>
+          <Link to="/" className="flex items-center shrink-0">
+            {settings.store_logo_url
+              ? <img src={settings.store_logo_url} alt={settings.store_name || 'LedgerCart'} className="h-10 w-auto" />
+              : <span className="text-xl font-bold text-primary-600">{settings.store_name || 'LedgerCart'}</span>
+            }
           </Link>
 
           {/* Search */}

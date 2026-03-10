@@ -45,6 +45,9 @@ export const productsAPI = {
   create: data => api.post('/products', data),
   update: (id, data) => api.put(`/products/${id}`, data),
   delete: id => api.delete(`/products/${id}`),
+  addImage: (productId, imageUrl, isPrimary = false) =>
+    api.post(`/products/${productId}/images`, null, { params: { image_url: imageUrl, is_primary: isPrimary } }),
+  removeImage: (productId, imageId) => api.delete(`/products/${productId}/images/${imageId}`),
 };
 
 // ─── Categories ─────────────
@@ -73,6 +76,9 @@ export const ordersAPI = {
   allOrders: params => api.get('/orders/all', { params }),
   updateStatus: (id, data) => api.put(`/orders/${id}/status`, data),
   cancel: id => api.post(`/orders/${id}/cancel`),
+  // ── Payment gateway endpoints (mock now, replace internals with Razorpay) ──
+  initiatePayment: id => api.post(`/orders/${id}/payment/initiate`),
+  verifyPayment:  (id, data) => api.post(`/orders/${id}/payment/verify`, data),
 };
 
 // ─── Coupons ────────────────
@@ -136,6 +142,11 @@ export const adminAPI = {
   settings: () => api.get('/admin/settings'),
   updateSetting: data => api.put('/admin/settings', data),
   salesReport: params => api.get('/admin/reports/sales', { params }),
+};
+
+// ─── Public ─────────────────
+export const publicAPI = {
+  settings: () => api.get('/admin/public/settings'),
 };
 
 // ─── Upload ─────────────────

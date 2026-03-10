@@ -40,7 +40,10 @@ def add_to_cart(req: CartItemAdd, user: User = Depends(get_current_user), db: Se
     item = db.query(CartItem).filter(CartItem.cart_id == cart.id, CartItem.product_id == req.product_id).first()
 
     if item:
-        item.quantity += req.quantity
+        new_qty = item.quantity + req.quantity
+        if new_qty > product.stock:
+            raise HTTPException(400, f"Only {product.stock} unit(s) available (you already have {item.quantity} in cart)")
+        item.quantity = new_qty
     else:
         item = CartItem(cart_id=cart.id, product_id=req.product_id, quantity=req.quantity)
         db.add(item)
@@ -59,6 +62,9 @@ def update_cart_item(item_id: str, quantity: int, user: User = Depends(get_curre
     if quantity <= 0:
         db.delete(item)
     else:
+        product = db.query(Product).filter(Product.id == item.product_id).first()
+        if product and quantity > product.stock:
+            raise HTTPException(400, f"Only {product.stock} unit(s) available in stock")
         item.quantity = quantity
     db.commit()
     return {"message": "Cart updated"}

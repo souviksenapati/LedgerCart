@@ -649,7 +649,7 @@ export default function AdminGRNPage() {
                           <input
                             type="number"
                             value={item.ordered_quantity}
-                            onChange={(e) => handleItemChange(index, 'ordered_quantity', parseInt(e.target.value) || 0)}
+                            onChange={(e) => handleItemChange(index, 'ordered_quantity', e.target.value === '' ? '' : parseInt(e.target.value))}
                             className="w-full px-2 py-1 border rounded"
                           />
                         </div>
@@ -658,7 +658,7 @@ export default function AdminGRNPage() {
                           <input
                             type="number"
                             value={item.received_quantity}
-                            onChange={(e) => handleItemChange(index, 'received_quantity', parseInt(e.target.value) || 0)}
+                            onChange={(e) => handleItemChange(index, 'received_quantity', e.target.value === '' ? '' : parseInt(e.target.value))}
                             className="w-full px-2 py-1 border rounded"
                             required
                           />
@@ -668,7 +668,7 @@ export default function AdminGRNPage() {
                           <input
                             type="number"
                             value={item.unit_price}
-                            onChange={(e) => handleItemChange(index, 'unit_price', parseFloat(e.target.value) || 0)}
+                            onChange={(e) => handleItemChange(index, 'unit_price', e.target.value === '' ? '' : parseFloat(e.target.value))}
                             className="w-full px-2 py-1 border rounded"
                             step="0.01"
                           />
@@ -833,7 +833,7 @@ export default function AdminGRNPage() {
                       <input
                         type="number"
                         value={newProduct.price}
-                        onChange={(e) => setNewProduct({ ...newProduct, price: parseFloat(e.target.value) || 0 })}
+                        onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value === '' ? '' : parseFloat(e.target.value) })}
                         className="w-full px-3 py-2 border rounded-lg"
                         step="0.01"
                         required
@@ -845,7 +845,7 @@ export default function AdminGRNPage() {
                       <input
                         type="number"
                         value={newProduct.stock}
-                        onChange={(e) => setNewProduct({ ...newProduct, stock: parseInt(e.target.value) || 0 })}
+                        onChange={(e) => setNewProduct({ ...newProduct, stock: e.target.value === '' ? '' : parseInt(e.target.value) })}
                         className="w-full px-3 py-2 border rounded-lg"
                       />
                     </div>

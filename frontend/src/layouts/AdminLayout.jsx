@@ -1,5 +1,6 @@
 import { NavLink, Outlet, Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useSettings } from '../context/SettingsContext';
 import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import {
@@ -65,6 +66,7 @@ const links = [
 
 export default function AdminLayout() {
   const { user, isStaff, hasPermission, logout } = useAuth();
+  const settings = useSettings();
   const location = useLocation();
   const [hoveredNavItem, setHoveredNavItem] = useState(null);
   const [hoveredLink, setHoveredLink] = useState(null);
@@ -111,12 +113,12 @@ export default function AdminLayout() {
       {/* Sidebar */}
       <aside className="w-64 bg-gray-900 text-white flex flex-col shrink-0 shadow-2xl relative overflow-visible">
         <div className="p-5 border-b border-gray-700 bg-gray-800">
-          <div className="flex items-center gap-2">
-            <Store className="w-7 h-7 text-primary-400" />
-            <div>
-              <p className="font-bold">Senapati Hardware</p>
-              <p className="text-xs text-gray-400">Admin Panel</p>
-            </div>
+          <div className="flex items-center gap-3">
+            {settings.store_logo_url
+              ? <img src={settings.store_logo_url} alt={settings.store_name || 'LedgerCart'} className="h-8 w-auto brightness-0 invert" />
+              : <span className="font-bold text-white">{settings.store_name || 'LedgerCart'}</span>
+            }
+            <p className="text-xs text-gray-400">Admin Panel</p>
           </div>
         </div>
         <nav className="flex-1 py-4 overflow-y-auto overflow-x-visible">

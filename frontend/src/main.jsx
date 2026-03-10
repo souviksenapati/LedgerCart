@@ -6,6 +6,7 @@ import axios from 'axios'
 import App from './App'
 import { AuthProvider } from './context/AuthContext'
 import { CartProvider } from './context/CartContext'
+import { SettingsProvider } from './context/SettingsContext'
 import './index.css'
 
 axios.interceptors.request.use((config) => {
@@ -39,10 +40,12 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <BrowserRouter>
       <AuthProvider>
-        <CartProvider>
-          <App />
-          <Toaster position="top-right" />
-        </CartProvider>
+        <SettingsProvider>
+          <CartProvider>
+            <App />
+            <Toaster position="top-right" />
+          </CartProvider>
+        </SettingsProvider>
       </AuthProvider>
     </BrowserRouter>
   </React.StrictMode>

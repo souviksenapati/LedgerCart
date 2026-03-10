@@ -34,7 +34,7 @@ export default function LoginPage() {
   return (
     <div className="min-h-[80vh] flex items-center justify-center px-4">
       <div className="card p-8 w-full max-w-md">
-        <h1 className="text-2xl font-bold text-center mb-6">Login to Senapati Hardware</h1>
+        <h1 className="text-2xl font-bold text-center mb-6">Login to LedgerCart</h1>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium mb-1">Email</label>
