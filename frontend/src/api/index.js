@@ -75,7 +75,7 @@ export const ordersAPI = {
   get: id => api.get(`/orders/${id}`),
   allOrders: params => api.get('/orders/all', { params }),
   updateStatus: (id, data) => api.put(`/orders/${id}/status`, data),
-  cancel: id => api.post(`/orders/${id}/cancel`),
+  cancel: (id, reason) => api.post(`/orders/${id}/cancel`, { reason }),
   // ── Payment gateway endpoints (mock now, replace internals with Razorpay) ──
   initiatePayment: id => api.post(`/orders/${id}/payment/initiate`),
   verifyPayment:  (id, data) => api.post(`/orders/${id}/payment/verify`, data),

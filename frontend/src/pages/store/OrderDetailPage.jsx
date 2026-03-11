@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ordersAPI } from '../../api';
 import { LoadingSpinner, StatusBadge } from '../../components/UI';
-import { Package, MapPin, CreditCard, Truck, CheckCircle2, XCircle, RotateCcw, Clock, Cog, ShoppingBag } from 'lucide-react';
+import { Package, MapPin, CreditCard, Truck, CheckCircle2, XCircle, RotateCcw, Clock, Cog, ShoppingBag, AlertTriangle } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 const ORDER_STEPS = [
@@ -82,6 +82,21 @@ export default function OrderDetailPage() {
   const { id } = useParams();
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [cancelModal, setCancelModal] = useState(false);
+  const [cancelReason, setCancelReason] = useState('');
+  const [cancelOther, setCancelOther] = useState('');
+  const [cancelling, setCancelling] = useState(false);
+
+  const CANCEL_REASONS = [
+    'I changed my mind',
+    'I ordered by mistake',
+    'I found a better price elsewhere',
+    'Delivery time is too long',
+    'I want to change the delivery address',
+    'I want to change the payment method',
+    'Duplicate order placed',
+    'Other',
+  ];
 
   useEffect(() => {
     ordersAPI.get(id)
@@ -91,13 +106,18 @@ export default function OrderDetailPage() {
   }, [id]);
 
   const cancelOrder = async () => {
-    if (!confirm('Cancel this order?')) return;
+    const finalReason = cancelReason === 'Other' ? (cancelOther.trim() || 'Other') : cancelReason;
+    if (!finalReason) { toast.error('Please select a reason'); return; }
+    setCancelling(true);
     try {
-      await ordersAPI.cancel(id);
-      toast.success('Order cancelled');
-      setOrder({ ...order, status: 'cancelled' });
+      await ordersAPI.cancel(id, finalReason);
+      toast.success('Order cancelled successfully');
+      setOrder({ ...order, status: 'cancelled', payment_status: order.payment_status === 'paid' ? 'refunded' : order.payment_status });
+      setCancelModal(false);
     } catch (err) {
       toast.error(err.response?.data?.detail || 'Failed to cancel');
+    } finally {
+      setCancelling(false);
     }
   };
 
@@ -226,9 +246,85 @@ export default function OrderDetailPage() {
       {/* Actions */}
       {(order.status === 'pending' || order.status === 'confirmed') && (
         <div className="flex justify-end">
-          <button onClick={cancelOrder} className="btn-secondary text-red-600">
+          <button onClick={() => { setCancelReason(''); setCancelOther(''); setCancelModal(true); }}
+            className="btn-secondary text-red-600 border-red-200 hover:bg-red-50">
             Cancel Order
           </button>
+        </div>
+      )}
+
+      {/* Cancellation Reason Modal */}
+      {cancelModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl w-full max-w-md shadow-xl">
+            {/* Header */}
+            <div className="p-6 border-b">
+              <div className="flex items-center gap-3 mb-1">
+                <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center">
+                  <AlertTriangle className="w-5 h-5 text-red-600" />
+                </div>
+                <div>
+                  <h2 className="font-bold text-lg text-gray-900">Cancel Order</h2>
+                  <p className="text-xs text-gray-400">{order.order_number}</p>
+                </div>
+              </div>
+              <p className="text-sm text-gray-500 mt-2">
+                Please tell us why you want to cancel. This helps us serve you better.
+              </p>
+            </div>
+
+            {/* Reasons */}
+            <div className="p-5 space-y-2 max-h-72 overflow-y-auto">
+              {CANCEL_REASONS.map(r => (
+                <label key={r} className={`flex items-center gap-3 border rounded-xl px-4 py-3 cursor-pointer transition-all ${
+                  cancelReason === r ? 'border-red-400 bg-red-50' : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                }`}>
+                  <input
+                    type="radio"
+                    name="cancelReason"
+                    value={r}
+                    checked={cancelReason === r}
+                    onChange={() => setCancelReason(r)}
+                    className="accent-red-500"
+                  />
+                  <span className="text-sm text-gray-700">{r}</span>
+                </label>
+              ))}
+              {cancelReason === 'Other' && (
+                <textarea
+                  className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-red-300 mt-1"
+                  rows={3}
+                  placeholder="Please describe your reason…"
+                  value={cancelOther}
+                  onChange={e => setCancelOther(e.target.value)}
+                  autoFocus
+                />
+              )}
+            </div>
+
+            {/* Refund note for paid orders */}
+            {order.payment_status === 'paid' && (
+              <div className="mx-5 mb-3 bg-blue-50 border border-blue-100 rounded-xl px-4 py-3 text-xs text-blue-700 flex items-start gap-2">
+                <span className="text-lg leading-none">ℹ️</span>
+                <span>Since this order is paid, a refund will be initiated within 5–7 business days after cancellation.</span>
+              </div>
+            )}
+
+            {/* Actions */}
+            <div className="p-5 border-t flex gap-3">
+              <button
+                onClick={() => setCancelModal(false)}
+                className="flex-1 px-4 py-2.5 border border-gray-300 rounded-xl text-sm font-medium hover:bg-gray-50">
+                Keep Order
+              </button>
+              <button
+                onClick={cancelOrder}
+                disabled={!cancelReason || cancelling}
+                className="flex-1 px-4 py-2.5 bg-red-600 text-white rounded-xl text-sm font-medium hover:bg-red-700 disabled:opacity-40 disabled:cursor-not-allowed">
+                {cancelling ? 'Cancelling…' : 'Confirm Cancel'}
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

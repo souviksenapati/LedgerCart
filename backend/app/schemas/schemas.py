@@ -273,6 +273,7 @@ class OrderResponse(BaseModel):
     shipping_pincode: str
     notes: str
     tracking_number: str
+    cancellation_reason: Optional[str] = None
     delivered_at: Optional[datetime] = None
     items: List[OrderItemResponse] = []
     created_at: datetime
@@ -284,6 +285,10 @@ class OrderStatusUpdate(BaseModel):
     status: str
     tracking_number: Optional[str] = None
     payment_status: Optional[str] = None
+    cancellation_reason: Optional[str] = None
+
+class OrderCancelRequest(BaseModel):
+    reason: str
 
 class OrderListResponse(BaseModel):
     orders: List[OrderResponse]

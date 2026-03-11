@@ -449,6 +449,7 @@ class Order(Base):
     shipping_pincode = Column(String(10), nullable=False)
     notes = Column(Text, default="")
     tracking_number = Column(String(200), default="")
+    cancellation_reason = Column(String(500), nullable=True)  # Reason provided by customer/admin on cancel
     estimated_delivery = Column(DateTime, nullable=True)
     delivered_at = Column(DateTime, nullable=True)
     # ── Payment Gateway fields (Razorpay / Stripe) ──────────────────────────

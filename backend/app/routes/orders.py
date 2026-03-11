@@ -10,7 +10,7 @@ from app.models.models import (
     OrderStatus, PaymentStatus, PaymentMethod, DiscountType, InventoryLog
 )
 from app.schemas.schemas import (
-    OrderCreate, OrderResponse, OrderStatusUpdate, OrderListResponse
+    OrderCreate, OrderResponse, OrderStatusUpdate, OrderListResponse, OrderCancelRequest
 )
 from app.utils.auth import get_current_user, require_permission
 
@@ -398,7 +398,12 @@ def payment_gateway_webhook(request_data: dict, db: Session = Depends(get_db)):
 
 
 @router.post("/{order_id}/cancel")
-def cancel_order(order_id: str, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+def cancel_order(
+    order_id: str,
+    req: OrderCancelRequest,
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
     order = db.query(Order).options(*_order_options()).filter(Order.id == order_id).first()
     if not order:
         raise HTTPException(404, "Order not found")
@@ -408,6 +413,9 @@ def cancel_order(order_id: str, user: User = Depends(get_current_user), db: Sess
         raise HTTPException(400, "Cannot cancel this order")
 
     order.status = OrderStatus.CANCELLED
+    order.cancellation_reason = req.reason
+    if order.payment_status == PaymentStatus.PAID:
+        order.payment_status = PaymentStatus.REFUNDED
     # Restore stock
     for item in order.items:
         product = db.query(Product).filter(Product.id == item.product_id).first()
@@ -416,7 +424,7 @@ def cancel_order(order_id: str, user: User = Depends(get_current_user), db: Sess
             db.add(InventoryLog(
                 product_id=product.id,
                 change=item.quantity,
-                reason=f"Order {order.order_number} cancelled",
+                reason=f"Order {order.order_number} cancelled — {req.reason}",
                 performed_by=user.id
             ))
     db.commit()

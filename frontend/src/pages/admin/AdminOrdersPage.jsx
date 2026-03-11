@@ -287,6 +287,10 @@ export default function AdminOrdersPage() {
                 {selected.tracking_number && (
                   <><span className="text-gray-500">Tracking #</span><span className="font-mono">{selected.tracking_number}</span></>
                 )}
+                {selected.cancellation_reason && (
+                  <><span className="text-gray-500">Cancel Reason</span>
+                  <span className="text-red-600 text-xs">{selected.cancellation_reason}</span></>
+                )}
               </div>
 
               <hr />
