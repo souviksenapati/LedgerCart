@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 48" fill="none">
+  <!-- Icon: ledger book + cart -->
+  <rect x="4" y="8" width="28" height="32" rx="4" fill="#2563EB"/>
+  <rect x="8" y="12" width="16" height="2" rx="1" fill="white" opacity="0.9"/>
+  <rect x="8" y="17" width="16" height="2" rx="1" fill="white" opacity="0.9"/>
+  <rect x="8" y="22" width="12" height="2" rx="1" fill="white" opacity="0.9"/>
+  <rect x="8" y="27" width="14" height="2" rx="1" fill="white" opacity="0.9"/>
+  <!-- Cart icon overlay -->
+  <circle cx="28" cy="32" r="9" fill="#1E40AF"/>
+  <path d="M22 28h1.5l2 5.5h5l1.5-4h-7" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <circle cx="26" cy="35" r="1" fill="white"/>
+  <circle cx="30" cy="35" r="1" fill="white"/>
+  <!-- Wordmark -->
+  <text x="46" y="31" font-family="'Segoe UI', system-ui, -apple-system, sans-serif" font-size="20" font-weight="700" fill="#1E293B" letter-spacing="-0.5">Ledger</text>
+  <text x="118" y="31" font-family="'Segoe UI', system-ui, -apple-system, sans-serif" font-size="20" font-weight="700" fill="#2563EB" letter-spacing="-0.5">Cart</text>
+</svg>

@@ -12,7 +12,7 @@ export default function Footer() {
           <div className="flex items-center gap-2 mb-4">
             {settings.store_logo_url
               ? <img src={settings.store_logo_url} alt={settings.store_name || 'LedgerCart'} className="h-10 w-auto brightness-0 invert" />
-              : <span className="text-lg font-bold text-white">{settings.store_name || 'LedgerCart'}</span>
+              : <img src="/logo.svg" alt={settings.store_name || 'LedgerCart'} className="h-10 w-auto brightness-0 invert" />
             }
           </div>
           <p className="text-sm text-gray-400">Your one-stop shop for all hardware needs. From hand tools to power tools, plumbing to electrical — we have it all.</p>

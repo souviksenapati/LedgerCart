@@ -1,4 +1,4 @@
-# Backend Dockerfile for Senapati Hardware FastAPI App
+# Backend Dockerfile for LedgerCart FastAPI App
 FROM python:3.13-slim
 
 WORKDIR /app

@@ -40,7 +40,7 @@ export default function Navbar() {
           <Link to="/" className="flex items-center shrink-0">
             {settings.store_logo_url
               ? <img src={settings.store_logo_url} alt={settings.store_name || 'LedgerCart'} className="h-10 w-auto" />
-              : <span className="text-xl font-bold text-primary-600">{settings.store_name || 'LedgerCart'}</span>
+              : <img src="/logo.svg" alt={settings.store_name || 'LedgerCart'} className="h-10 w-auto" />
             }
           </Link>
 

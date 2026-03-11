@@ -1,4 +1,4 @@
-# Frontend Dockerfile for Senapati Hardware React App
+# Frontend Dockerfile for LedgerCart React App
 # Stage 1: Build the React app
 FROM node:20-alpine AS builder
 
