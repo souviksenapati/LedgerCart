@@ -18,22 +18,34 @@ from app.routes import (
 # Create tables
 Base.metadata.create_all(bind=engine)
 
+_IS_PRODUCTION = os.getenv("ENVIRONMENT", "dev") == "production"
+
 app = FastAPI(
     title="LedgerCart API",
     description="Full-scale E-Commerce API for LedgerCart Store",
-    version="1.0.0"
+    version="1.0.0",
+    # Disable interactive docs in production to avoid exposing the full API schema
+    docs_url=None if _IS_PRODUCTION else "/docs",
+    redoc_url=None if _IS_PRODUCTION else "/redoc",
+    openapi_url=None if _IS_PRODUCTION else "/openapi.json",
 )
 
 # Startup Security Check
+_INSECURE_KEYS = {"change-me", "your-secret-key-change-in-production", "secret", ""}
+
 @app.on_event("startup")
 async def startup_event():
-    if settings.SECRET_KEY == "change-me" and os.getenv("ENVIRONMENT", "dev") == "production":
-        # In production, we must fail if the secret key is default
-        import logging
-        logging.error("CRITICAL: Application failed to start. SECRET_KEY is set to default 'change-me' in production environment.")
-        # We can't easily exit here without crashing the worker, 
-        # but we can log a severe error or potentially raise an exception to stop startup.
-        raise RuntimeError("CRITICAL SECURITY RISK: SECRET_KEY is default 'change-me'. Update .env file immediately.")
+    if _IS_PRODUCTION:
+        if settings.SECRET_KEY in _INSECURE_KEYS:
+            import logging
+            logging.critical(
+                "CRITICAL SECURITY RISK: SECRET_KEY is set to a known-insecure default value. "
+                "Update the SECRET_KEY environment variable immediately before going live."
+            )
+            raise RuntimeError(
+                "CRITICAL SECURITY RISK: SECRET_KEY is a known-insecure default. "
+                "Set a strong random SECRET_KEY in your environment."
+            )
 
 # CORS
 app.add_middleware(

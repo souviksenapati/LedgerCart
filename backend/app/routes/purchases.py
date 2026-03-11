@@ -298,11 +298,27 @@ def create_grn(
             )
             db.add(log)
     
-    # Update Purchase Order status
+    # Update Purchase Order status — only mark RECEIVED when all items fully received
     if grn.po_id:
-        po = db.query(PurchaseOrder).filter(PurchaseOrder.id == grn.po_id).first()
+        po = db.query(PurchaseOrder).options(joinedload(PurchaseOrder.items)).filter(PurchaseOrder.id == grn.po_id).first()
         if po:
-            po.status = PurchaseOrderStatus.RECEIVED
+            # Build a map of received quantities from this and previous GRNs
+            from sqlalchemy import func
+            received_map = {
+                row.product_id: row.total_received
+                for row in db.query(
+                    GRNItem.product_id,
+                    func.sum(GRNItem.received_quantity).label("total_received")
+                ).join(GoodsReceivedNote, GRNItem.grn_id == GoodsReceivedNote.id)
+                .filter(GoodsReceivedNote.po_id == grn.po_id)
+                .group_by(GRNItem.product_id)
+                .all()
+            }
+            fully_received = all(
+                received_map.get(item.product_id, 0) >= item.quantity
+                for item in po.items
+            )
+            po.status = PurchaseOrderStatus.RECEIVED if fully_received else PurchaseOrderStatus.PARTIALLY_RECEIVED
             
     db.commit()
     db.refresh(db_grn)

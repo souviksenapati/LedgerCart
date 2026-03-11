@@ -88,13 +88,13 @@ def list_customers(
 
 
 @router.put("/customers/{user_id}/toggle-active")
-def toggle_customer(user_id: str, user=Depends(require_permission("ecom_customers:manage")), db: Session = Depends(get_db)):
-    user = db.query(User).filter(User.id == user_id).first()
-    if not user:
+def toggle_customer(user_id: str, current_user=Depends(require_permission("ecom_customers:manage")), db: Session = Depends(get_db)):
+    target = db.query(User).filter(User.id == user_id).first()
+    if not target:
         raise HTTPException(404, "User not found")
-    user.is_active = not user.is_active
+    target.is_active = not target.is_active
     db.commit()
-    return {"message": f"User {'activated' if user.is_active else 'deactivated'}"}
+    return {"message": f"User {'activated' if target.is_active else 'deactivated'}"}
 
 
 # ─── STAFF MANAGEMENT ───────────────────────────────────

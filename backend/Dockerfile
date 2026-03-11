@@ -27,5 +27,7 @@ EXPOSE 8000
 HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=3 \
     CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/health')" || exit 1
 
-# Run database migrations and start server
-CMD python seed.py && uvicorn app.main:app --host 0.0.0.0 --port 8000
+# Run the API server
+# NOTE: seed.py must NOT be run in production — it drops all tables.
+# To seed a fresh dev environment: docker exec -it ledgercart-backend python seed.py
+CMD uvicorn app.main:app --host 0.0.0.0 --port 8000

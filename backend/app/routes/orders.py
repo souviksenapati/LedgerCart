@@ -53,19 +53,29 @@ def create_order(req: OrderCreate, user: User = Depends(get_current_user), db: S
     if not req.shipping_name:
         raise HTTPException(400, "Shipping address is required")
 
+    # Lock product rows to prevent race-condition overselling
+    product_ids = [ci.product_id for ci in cart.items]
+    locked_products = {
+        p.id: p
+        for p in db.query(Product).filter(Product.id.in_(product_ids)).with_for_update().all()
+    }
+
     # Calculate totals
     subtotal = 0
     order_items = []
     for ci in cart.items:
-        if ci.product.stock < ci.quantity:
-            raise HTTPException(400, f"Insufficient stock for {ci.product.name}")
-        item_total = float(ci.product.price) * ci.quantity
+        product = locked_products.get(ci.product_id)
+        if not product or not product.is_active:
+            raise HTTPException(400, f"Product '{ci.product_id}' is no longer available")
+        if product.stock < ci.quantity:
+            raise HTTPException(400, f"Insufficient stock for {product.name}")
+        item_total = float(product.price) * ci.quantity
         subtotal += item_total
         order_items.append(OrderItem(
-            product_id=ci.product.id,
-            product_name=ci.product.name,
-            product_sku=ci.product.sku,
-            price=float(ci.product.price),
+            product_id=product.id,
+            product_name=product.name,
+            product_sku=product.sku,
+            price=float(product.price),
             quantity=ci.quantity,
             total=item_total
         ))
@@ -118,11 +128,12 @@ def create_order(req: OrderCreate, user: User = Depends(get_current_user), db: S
     )
     db.add(order)
 
-    # Deduct stock
+    # Deduct stock using the locked product rows
     for ci in cart.items:
-        ci.product.stock -= ci.quantity
+        product = locked_products[ci.product_id]
+        product.stock -= ci.quantity
         db.add(InventoryLog(
-            product_id=ci.product.id,
+            product_id=product.id,
             change=-ci.quantity,
             reason=f"Order {order.order_number}",
             performed_by=user.id

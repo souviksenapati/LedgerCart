@@ -21,6 +21,16 @@ def create_payment(
     if existing:
         raise HTTPException(status_code=400, detail="Payment number already exists")
 
+    # Check if payment amount exceeds the outstanding balance
+    if payment.payment_type == "purchase" and payment.purchase_invoice_id:
+        pre_check = db.query(PurchaseInvoice).filter(PurchaseInvoice.id == payment.purchase_invoice_id).first()
+        if pre_check and float(payment.amount) > float(pre_check.balance_due):
+            raise HTTPException(status_code=400, detail=f"Payment amount ({payment.amount}) exceeds outstanding balance ({pre_check.balance_due})")
+    elif payment.payment_type == "sales" and payment.sales_invoice_id:
+        pre_check = db.query(SalesInvoice).filter(SalesInvoice.id == payment.sales_invoice_id).first()
+        if pre_check and float(payment.amount) > float(pre_check.balance_due):
+            raise HTTPException(status_code=400, detail=f"Payment amount ({payment.amount}) exceeds outstanding balance ({pre_check.balance_due})")
+
     # Create payment
     db_payment = Payment(
         **payment.model_dump(),

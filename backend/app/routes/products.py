@@ -124,9 +124,10 @@ def delete_product(product_id: str, admin=Depends(require_permission("catalog:ma
     product = db.query(Product).filter(Product.id == product_id).first()
     if not product:
         raise HTTPException(404, "Product not found")
-    db.delete(product)
+    # Soft-delete: deactivate rather than hard-delete to preserve order history integrity
+    product.is_active = False
     db.commit()
-    return {"message": "Product deleted"}
+    return {"message": "Product deactivated"}
 
 
 @router.post("/{product_id}/images")
