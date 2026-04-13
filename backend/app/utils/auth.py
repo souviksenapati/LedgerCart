@@ -63,6 +63,19 @@ def require_admin(user: User = Depends(get_current_user)) -> User:
     return user
 
 
+def require_platform_admin(user: User = Depends(get_current_user)) -> User:
+    """
+    Dependency: allows only PLATFORM_ADMIN role.
+    Used exclusively by /api/console/* routes.
+    """
+    if user.role != UserRole.PLATFORM_ADMIN:
+        raise HTTPException(
+            status_code=403,
+            detail="Platform administrator access required"
+        )
+    return user
+
+
 def require_staff_or_admin(user: User = Depends(get_current_user)) -> User:
     if user.role == UserRole.CUSTOMER:
         raise HTTPException(status_code=403, detail="Staff or admin access required")

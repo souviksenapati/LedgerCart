@@ -48,6 +48,7 @@ echo ==========================================
 echo.
 echo  Frontend (Store):  http://localhost
 echo  Admin Panel:       http://localhost/admin
+echo  Console Panel:     http://localhost:8081
 echo  Backend API:       http://localhost:8000
 echo  API Docs:          http://localhost:8000/docs
 echo.

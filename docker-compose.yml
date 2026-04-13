@@ -31,11 +31,11 @@ services:
     restart: unless-stopped
     environment:
       DATABASE_URL: postgresql://postgres:postgres@postgres:5432/ledgercart
-      SECRET_KEY: your-secret-key-change-in-production
+      SECRET_KEY: 77bdd0aca2bfca3c4dc886a155b931cc4b9d5e2c428cf9bb48988ed1a2aecf77
       ALGORITHM: HS256
       ACCESS_TOKEN_EXPIRE_MINUTES: 1440
       UPLOAD_DIR: uploads
-      CORS_ORIGINS: http://localhost,http://localhost:80,http://localhost:3000
+      CORS_ORIGINS: http://localhost,http://localhost:80,http://localhost:8081,http://app.ledgercart.local,http://console.ledgercart.local
       ENVIRONMENT: production
     volumes:
       - backend_uploads:/app/uploads
@@ -53,15 +53,35 @@ services:
     networks:
       - ledgercart-network
 
-  # React Frontend with Nginx
-  frontend:
+  # App Frontend (store + admin panel) — port 80
+  app-frontend:
     build:
-      context: ./frontend
+      context: ./app-frontend
       dockerfile: Dockerfile
-    container_name: ledgercart-frontend
+    container_name: ledgercart-app
     restart: unless-stopped
     ports:
       - "80:80"
+    depends_on:
+      - backend
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://127.0.0.1/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    networks:
+      - ledgercart-network
+
+  # Console Frontend (LedgerCart platform ops panel) — port 8081
+  console-frontend:
+    build:
+      context: ./console-frontend
+      dockerfile: Dockerfile
+    container_name: ledgercart-console
+    restart: unless-stopped
+    ports:
+      - "8081:80"
     depends_on:
       - backend
     healthcheck:
