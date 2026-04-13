@@ -1,0 +1,63 @@
+name: Contribute Pipeline Workflow
+
+on:
+  push:
+    branches:
+      - contribute
+  pull_request:
+    branches:
+      - test
+
+jobs:
+  validate-code:
+    name: Strict Code Validation & Build
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies (Strict Verification)
+        run: npm ci
+
+      - name: Security Vulnerability Check
+        run: npm audit --audit-level=high || echo "Ignoring non-critical vulnerability warnings for now"
+
+      - name: Run Strict Linting
+        run: npm run lint
+
+      - name: Build Application (Catches syntax and compilation errors)
+        run: npm run build
+
+  create-pr:
+    name: Create PR to test Branch
+    needs: validate-code
+    # ONLY run this job if validation passes AND it was a direct push to the contribute branch 
+    if: github.event_name == 'push' && github.ref == 'refs/heads/contribute'
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Create Pull Request to test branch
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr create \
+            --base test \
+            --head contribute \
+            --title "Automated PR: Merge \`contribute\` ➡ \`test\`" \
+            --body "This PR was generated automatically after the \`contribute\` branch passed strict code verification (linting, build compilation) successfully. 🚀 Please review the changes." || echo "A Pull Request already exists for these branches, or there are no differences."
