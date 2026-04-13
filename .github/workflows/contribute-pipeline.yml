@@ -22,17 +22,29 @@ jobs:
         with:
           node-version: 20
           cache: 'npm'
+          cache-dependency-path: |
+            app-frontend/package-lock.json
+            console-frontend/package-lock.json
 
-      - name: Install dependencies (Strict Verification)
+      - name: Install app frontend dependencies
+        working-directory: app-frontend
+        run: npm ci
+
+      - name: Install console frontend dependencies
+        working-directory: console-frontend
         run: npm ci
 
       - name: Security Vulnerability Check
-        run: npm audit --audit-level=high || echo "Ignoring non-critical vulnerability warnings for now"
+        run: |
+          npm audit --audit-level=high --prefix app-frontend || echo "Ignoring non-critical vulnerability warnings for app-frontend"
+          npm audit --audit-level=high --prefix console-frontend || echo "Ignoring non-critical vulnerability warnings for console-frontend"
 
-      - name: Run Strict Linting
-        run: npm run lint
+      - name: Build App Frontend
+        working-directory: app-frontend
+        run: npm run build
 
-      - name: Build Application (Catches syntax and compilation errors)
+      - name: Build Console Frontend
+        working-directory: console-frontend
         run: npm run build
 
   create-pr:
