@@ -1201,3 +1201,96 @@ class PaymentResponse(BaseModel):
     class Config:
         from_attributes = True
 
+
+# ─── CONSOLE: PLANS ──────────────────────────────────────
+class PlanCreate(BaseModel):
+    name: str
+    slug: str
+    price_monthly: float = 0.0
+    price_yearly: float = 0.0
+    max_users: int = 5
+    max_products: int = 100
+    features: List[str] = []
+    is_active: bool = True
+    sort_order: int = 0
+
+class PlanUpdate(BaseModel):
+    name: Optional[str] = None
+    price_monthly: Optional[float] = None
+    price_yearly: Optional[float] = None
+    max_users: Optional[int] = None
+    max_products: Optional[int] = None
+    features: Optional[List[str]] = None
+    is_active: Optional[bool] = None
+    sort_order: Optional[int] = None
+
+class PlanResponse(BaseModel):
+    id: str
+    name: str
+    slug: str
+    price_monthly: float
+    price_yearly: float
+    max_users: int
+    max_products: int
+    features: List[str] = []
+    is_active: bool
+    sort_order: int
+    tenant_count: int = 0
+    created_at: datetime
+
+    @field_validator('features', mode='before')
+    @classmethod
+    def parse_features(cls, v: Any) -> Any:
+        if isinstance(v, str):
+            try:
+                return json.loads(v or "[]")
+            except:
+                return []
+        return v or []
+
+    class Config:
+        from_attributes = True
+
+
+# ─── CONSOLE: TENANTS ────────────────────────────────────
+class TenantResponse(BaseModel):
+    id: str
+    name: str
+    subdomain: str
+    plan_id: Optional[str] = None
+    plan_name: Optional[str] = None
+    subscription_status: str
+    custom_features: List[str] = []
+    notes: str = ""
+    created_at: datetime
+
+    @field_validator('custom_features', mode='before')
+    @classmethod
+    def parse_custom_features(cls, v: Any) -> Any:
+        if isinstance(v, str):
+            try:
+                return json.loads(v or "[]")
+            except:
+                return []
+        return v or []
+
+    class Config:
+        from_attributes = True
+
+class TenantUpdate(BaseModel):
+    plan_id: Optional[str] = None
+    subscription_status: Optional[str] = None
+    custom_features: Optional[List[str]] = None
+    notes: Optional[str] = None
+
+
+# ─── CONSOLE: AUTH ───────────────────────────────────────
+class ConsoleLoginRequest(BaseModel):
+    email: EmailStr
+    password: str
+
+class ConsoleLoginResponse(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
+    user: "UserResponse"
+

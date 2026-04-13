@@ -20,6 +20,7 @@ class UserRole(str, enum.Enum):
     PURCHASE_MANAGER = "PURCHASE_MANAGER"
     STOCK_KEEPER = "STOCK_KEEPER"
     ACCOUNTANT = "ACCOUNTANT"
+    PLATFORM_ADMIN = "PLATFORM_ADMIN"  # LedgerCart internal ops team — console panel only
 
 class OrderStatus(str, enum.Enum):
     PENDING = "pending"
@@ -270,7 +271,8 @@ ROLE_PERMISSIONS = {
         "dashboard:view",
         "stock:view",
     ],
-    UserRole.CUSTOMER: [],  # No admin permissions
+    UserRole.CUSTOMER: [],       # No admin permissions
+    UserRole.PLATFORM_ADMIN: ["*"],  # Full platform access — console panel only
 }
 
 
@@ -1091,3 +1093,46 @@ class SerialNumber(Base):
     batch = relationship("Batch")
     grn = relationship("GoodsReceivedNote")
     sales_invoice = relationship("SalesInvoice")
+
+
+# ─── CONSOLE: PLAN ──────────────────────────────────────
+# Subscription plans that LedgerCart sells to its clients (tenants).
+# Managed exclusively via the console panel (/api/console/*).
+class Plan(Base):
+    __tablename__ = "plans"
+
+    id            = Column(String, primary_key=True, default=generate_uuid)
+    name          = Column(String(100), nullable=False)
+    slug          = Column(String(100), unique=True, nullable=False, index=True)
+    price_monthly = Column(Numeric(10, 2), default=0)
+    price_yearly  = Column(Numeric(10, 2), default=0)
+    max_users     = Column(Integer, default=5)       # 0 = unlimited
+    max_products  = Column(Integer, default=100)     # 0 = unlimited
+    features      = Column(Text, default="[]")       # JSON: ["catalog","inventory",...]
+    is_active     = Column(Boolean, default=True)
+    sort_order    = Column(Integer, default=0)
+    created_at    = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
+
+    tenants = relationship("Tenant", back_populates="plan")
+
+
+# ─── CONSOLE: TENANT ────────────────────────────────────
+# Each client business that subscribes to LedgerCart.
+# Managed exclusively via the console panel (/api/console/*).
+class Tenant(Base):
+    __tablename__ = "tenants"
+
+    id                  = Column(String, primary_key=True, default=generate_uuid)
+    name                = Column(String(200), nullable=False)
+    subdomain           = Column(String(100), unique=True, nullable=False, index=True)
+    plan_id             = Column(String, ForeignKey("plans.id"), nullable=True)
+    subscription_status = Column(String(20), default="trial")
+    # subscription_status values: trial | active | suspended | cancelled
+    owner_user_id       = Column(String, ForeignKey("users.id"), nullable=True)
+    custom_features     = Column(Text, default="[]")  # JSON: extra features beyond plan
+    notes               = Column(Text, default="")    # internal notes from console team
+    created_at          = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
+    updated_at          = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc),
+                                 onupdate=lambda: datetime.now(timezone.utc))
+
+    plan = relationship("Plan", back_populates="tenants")

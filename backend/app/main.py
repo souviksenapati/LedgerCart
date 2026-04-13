@@ -12,7 +12,8 @@ from app.models.models import *
 from app.routes import (
     auth, products, categories, cart, orders, coupons, reviews, wishlist, 
     addresses, banners, admin, upload,
-    suppliers, b2b_customers, warehouses, purchases, sales, payments
+    suppliers, b2b_customers, warehouses, purchases, sales, payments,
+    console
 )
 
 # Create tables
@@ -81,6 +82,7 @@ app.include_router(warehouses.router)
 app.include_router(purchases.router)
 app.include_router(sales.router)
 app.include_router(payments.router)
+app.include_router(console.router)
 
 
 @app.get("/")
